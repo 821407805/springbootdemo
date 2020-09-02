@@ -14,8 +14,12 @@ import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Created by Administrator on 2018/10/6.
- */
+ * @Author  Jasonxiao
+ * @Date    2020/8/28
+ * @Version 1.0
+ * @Description:
+ *      更多方法可参考 https://blog.csdn.net/XinhuaShuDiao/article/details/84906538
+*/
 @Service
 public class RedisService {
     @Autowired
@@ -99,7 +103,7 @@ public class RedisService {
      * @param value
      * @return
      */
-    public boolean set(final String key, Object value, Long expireTime) {
+    public boolean setWithExpireTime(final String key, Object value, Long expireTime) {
         boolean result = false;
         try {
             ValueOperations<Serializable, Object> operations = redisTemplate.opsForValue();
@@ -136,12 +140,13 @@ public class RedisService {
     }
 
     /**
-     * 判断缓存中是否有对应的value
+     * 判断缓存中是否有对应的key
      *
      * @param key
      * @return
      */
     public boolean exists(final String key) {
+
         return redisTemplate.hasKey(key);
     }
 
@@ -233,11 +238,11 @@ public class RedisService {
      *
      * @param key
      * @param value
-     * @param scoure
+     * @param score
      */
-    public void zAdd(String key, Object value, double scoure) {
+    public Boolean zAdd(String key, Object value, double score) {
         ZSetOperations<String, Object> zset = redisTemplate.opsForZSet();
-        zset.add(key, value, scoure);
+        return zset.add(key, value, score);
     }
 
     /**
@@ -253,35 +258,6 @@ public class RedisService {
         redisTemplate.opsForValue();
         return zset.rangeByScore(key, scoure, scoure1);
     }
-
-
-    //第一次加载的时候将数据加载到redis中
-    public void saveDataToRedis(String name) {
-        double index = Math.abs(name.hashCode() % size);
-        long indexLong = new Double(index).longValue();
-        boolean availableUsers = setBit("availableUsers", indexLong, true);
-    }
-
-    //第一次加载的时候将数据加载到redis中
-    public boolean getDataToRedis(String name) {
-
-        double index = Math.abs(name.hashCode() % size);
-        long indexLong = new Double(index).longValue();
-        return getBit("availableUsers", indexLong);
-    }
-
-    /**
-     * 有序集合获取排名
-     *
-     * @param key 集合名称
-     * @param value 值
-     */
-    public Long zRank(String key, Object value) {
-        ZSetOperations<String, Object> zset = redisTemplate.opsForZSet();
-        return zset.rank(key,value);
-    }
-
-
     /**
      * 有序集合获取排名
      *
@@ -292,9 +268,18 @@ public class RedisService {
         Set<ZSetOperations.TypedTuple<Object>> ret = zset.rangeWithScores(key,start,end);
         return ret;
     }
-
     /**
-     * 有序集合添加
+     * 有序集合获取排名
+     *
+     * @param key 集合名称
+     * @param value 值
+     */
+    public Long zRank(String key, Object value) {
+        ZSetOperations<String, Object> zset = redisTemplate.opsForZSet();
+        return zset.rank(key,value);
+    }
+    /**
+     * 获取元素的分值
      *
      * @param key
      * @param value
@@ -312,25 +297,24 @@ public class RedisService {
      * @param value
      * @param scoure
      */
-    public void incrementScore(String key, Object value, double scoure) {
+    public void incrementScore(String key, Object value, double score) {
         ZSetOperations<String, Object> zset = redisTemplate.opsForZSet();
-        zset.incrementScore(key, value, scoure);
+        zset.incrementScore(key, value, score);
     }
 
-
     /**
-     * 有序集合获取排名
+     * 有序集合获 按照指定分数区间 取倒序排名（从大到小）
      *
      * @param key
      */
-    public Set<ZSetOperations.TypedTuple<Object>> reverseZRankWithScore(String key, long start,long end) {
+    public Set<ZSetOperations.TypedTuple<Object>> reverseZRankWithScore(String key, double min, double max) {
         ZSetOperations<String, Object> zset = redisTemplate.opsForZSet();
-        Set<ZSetOperations.TypedTuple<Object>> ret = zset.reverseRangeByScoreWithScores(key,start,end);
+        Set<ZSetOperations.TypedTuple<Object>> ret = zset.reverseRangeByScoreWithScores(key,min,max);
         return ret;
     }
 
     /**
-     * 有序集合获取排名
+     * 有序集合获取排名倒序排名（从大到小）
      *
      * @param key
      */
@@ -338,6 +322,25 @@ public class RedisService {
         ZSetOperations<String, Object> zset = redisTemplate.opsForZSet();
         Set<ZSetOperations.TypedTuple<Object>> ret = zset.reverseRangeWithScores(key, start, end);
         return ret;
+    }
+
+    /**
+     第一次加载的时候将数据加载到redis中
+     */
+    public void saveDataToRedis(String name) {
+        double index = Math.abs(name.hashCode() % size);
+        long indexLong = new Double(index).longValue();
+        boolean availableUsers = setBit("availableUsers", indexLong, true);
+    }
+
+    /**
+     第一次加载的时候将数据加载到redis中
+     */
+    public boolean getDataToRedis(String name) {
+
+        double index = Math.abs(name.hashCode() % size);
+        long indexLong = new Double(index).longValue();
+        return getBit("availableUsers", indexLong);
     }
 
 }

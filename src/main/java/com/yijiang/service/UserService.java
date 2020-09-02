@@ -39,7 +39,9 @@ public class UserService {
     }
 
     @Nullable
-    @Cacheable(key="#p0", unless = "#result == null ") // @Cacheable 会先查询缓存，如果缓存中存在，则不执行方法
+    @Cacheable(key="#p0", unless = "#result == null ")
+    // @Cacheable 会先查询缓存，如果缓存中存在，则不执行方法
+    // 缓存空值 解决 缓存穿透时，unless 需要去掉
     public User findById(int id){
         System.err.println("根据id=" + id +"获取用户对象，从数据库中获取");
         Assert.notNull(id,"id不用为空");

@@ -27,6 +27,9 @@ public interface UserMapper {
 	 */
 	List<User> query(@Param("userName") String userName);
 
+	@Select("select id,user_name from sys_user")
+	List<User> queryAll();
+
 	@Delete("delete from sys_user")
 	void deleteAll();
 }

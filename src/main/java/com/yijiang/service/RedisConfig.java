@@ -16,6 +16,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.RedisSerializationContext;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
+import org.springframework.session.data.redis.config.annotation.web.http.EnableRedisHttpSession;
 
 import java.time.Duration;
 import java.util.HashMap;
@@ -24,11 +25,14 @@ import java.util.Map;
 /**
  * @ClassName: RedisConfig
  * @Description:
+ * @EnableCaching       开启redis作为mybatis二级缓存
+ * @EnableRedisHttpSession       开启redis存储session，解决分布式集群session共享
  * @Author Jason
  * @Date 2020/8/24 19:38
  */
 @Configuration
 @EnableCaching
+@EnableRedisHttpSession(maxInactiveIntervalInSeconds = 50)
 public class RedisConfig {
     @Bean
     public RedisTemplate redisTemplate(RedisConnectionFactory factory){
