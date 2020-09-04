@@ -7,11 +7,15 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+
+import java.lang.annotation.Target;
+import java.util.concurrent.TimeUnit;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
@@ -26,6 +30,8 @@ public class StringBootDemoTest {
 
     @Autowired
     private MockMvc mockMvc;
+    @Autowired
+    private RedisTemplate redisTemplate;
     @Test
     public  void testTwo(){
         System.out.printf("springBoot test %s", " two");
@@ -42,11 +48,22 @@ public class StringBootDemoTest {
     }
 
     @Test
-    public  void testOne(){
-
+    public void testOne(){
         String.format("springBoot test %s", " one");
         System.out.printf("springBoot test %s", " one");
         Assert.assertEquals("错误信息",1, 1);
+    }
+
+    @Test
+    public void testThree(){
+        /*Boolean result = redisTemplate.opsForValue().setIfAbsent("test001", "ddddddd");
+        System.out.println(result+"33333333333333333333333333");*/
+        redisTemplate.opsForValue().set("test005","ddddddd",10, TimeUnit.SECONDS);
+        try {
+            Thread.sleep(5000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
 }

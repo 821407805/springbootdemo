@@ -5,12 +5,14 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.ServletComponentScan;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 /**
  * @author yi
  * @date 2020/6/4 9:36
  */
 @SpringBootApplication
+@EnableScheduling
 //@ServletComponentScan
 public class DemoApplication extends SpringBootServletInitializer {
     @Override
