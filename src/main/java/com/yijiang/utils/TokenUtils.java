@@ -4,7 +4,7 @@
  * 创建日期:
  * 版权归属:每特教育|蚂蚁课堂所有 www.itmayiedu.com
  */
-package com.yijing.utils;
+package com.yijiang.utils;
 
 import org.springframework.util.StringUtils;
 

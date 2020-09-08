@@ -1,11 +1,8 @@
 package com.yijiang.controller;
 
 import com.yijiang.service.RedisService;
-import com.yijing.utils.HttpDeal;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.yijiang.utils.HttpDeal;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.serializer.RedisSerializer;
-import org.springframework.data.redis.serializer.StringRedisSerializer;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -18,14 +15,16 @@ public class DemoController {
 
     @Resource
     RedisService redisService;
+    @Resource
+    RedisTemplate redisTemplate;
 
-    /*@ResponseBody
+    @ResponseBody
     @RequestMapping("/redis/GetSet")
     public String redisGetAndSet(String name, String value ){
         redisTemplate.opsForValue().set(name, value);
         System.out.println("---------------------------------");
         return (String) redisTemplate.opsForValue().get(name);
-    }*/
+    }
 
     @ResponseBody
     @RequestMapping("/redis/GetAndSet")
