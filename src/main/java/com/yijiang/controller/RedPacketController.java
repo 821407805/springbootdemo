@@ -13,8 +13,14 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
-import java.util.*;
-
+import java.util.Date;
+import java.util.Random;
+/**
+ * @Author  Jasonxiao
+ * @Date    2020/9/9
+ * @Version 1.0
+ * @Description: 
+*/
 @RestController
 public class RedPacketController {
 
@@ -22,10 +28,11 @@ public class RedPacketController {
     @Autowired
     private RedisService redisService;
 
-    @Resource
-    private RedPacketInfoMapper redPacketInfoMapper;
+    @Autowired
+    RedPacketInfoMapper redPacketInfoMapper;
 
-    @Resource
+
+    @Autowired
     private RedPacketRecordMapper redPacketRecordMapper;
 
     private static final String TOTAL_NUM = "_totalNum";
@@ -46,7 +53,8 @@ public class RedPacketController {
         record.setCreateTime(new Date());
         record.setRemainingAmount(totalAmount);
         record.setRemainingPacket(totalNum);
-        long redPacketId = System.currentTimeMillis();   //此时无法保证红包id唯一，最好是用雪花算法进行生成分布式系统唯一键
+        //此时无法保证红包id唯一，最好是用雪花算法进行生成分布式系统唯一键
+        long redPacketId = System.currentTimeMillis();
         record.setRedPacketId(redPacketId);
         redPacketInfoMapper.insert(record);
         redisService.set(redPacketId + "_totalNum", totalNum + "");
@@ -64,6 +72,7 @@ public class RedPacketController {
     @ResponseBody
     @RequestMapping("/getPacket")
     public Integer getRedPacket(long redPacketId) {
+        //TODO 将无效的请求过滤掉（抢红包时记录请求个数>红包个数*2时直接返回红包已抢完），实际进入到后台的量不大。cache记录红包个数，原子操作进行个数递减，到0表示被抢光
         String redPacketName = redPacketId + TOTAL_NUM;
         String num = (String) redisService.get(redPacketName);
         if (StringUtils.isNotBlank(num)) {
@@ -96,7 +105,7 @@ public class RedPacketController {
             Random random = new Random();
             randomAmount = random.nextInt(maxMoney);
         }
-        //课堂作业：lua脚本将这两个命令一起请求
+        //TODO lua脚本将这两个命令一起请求
         redisService.incre(redPacketName, -1);
         redisService.incre(totalAmountName,-randomAmount);
         updateRacketInDB(uid, redPacketId,randomAmount);
