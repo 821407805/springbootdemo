@@ -15,6 +15,12 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.lang.annotation.Target;
+import java.sql.SQLOutput;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.TimeUnit;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -64,6 +70,26 @@ public class StringBootDemoTest {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+    }
+    @Test
+    public void testList(){
+        List<Integer> list = Collections.synchronizedList(new ArrayList<>());
+        ConcurrentLinkedQueue<Integer> concurrentLinkedQueue = new ConcurrentLinkedQueue();
+        FixSizeArrayList fixSizeArrayList = new FixSizeArrayList( 5 );
+
+        for (int i = 1; i < 1000; i++){
+            new Thread( () -> {
+                synchronized(this) {
+                    if(fixSizeArrayList.size() > 200){
+                        System.out.println("____________________");
+                        return;
+                    }
+                    fixSizeArrayList.add(3);
+                }
+                System.out.println("list的size是："+ fixSizeArrayList.size());
+            } ).start();
+        }
+
     }
 
 }

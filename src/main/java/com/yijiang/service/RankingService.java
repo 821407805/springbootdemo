@@ -14,10 +14,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
-
+/**
+ * @Author  Jasonxiao
+ * @Date    2020/9/9
+ * @Version 1.0
+ * @Description: implements InitializingBean 作用：在容器启动之前，执行 afterPropertiesSet() 方法
+*/
 @Service
 public class RankingService implements InitializingBean {
-
 
     private static final String RANKGNAME = "user_score";
 
@@ -28,8 +32,6 @@ public class RankingService implements InitializingBean {
 
     @Autowired
     private UserMapper userMapper;
-
-
 
     public Boolean zAdd(String uid, Integer score) {
 

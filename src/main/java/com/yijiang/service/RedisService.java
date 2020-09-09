@@ -1,14 +1,14 @@
 package com.yijiang.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.EnableCaching;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.redis.core.*;
-import org.springframework.data.redis.serializer.RedisSerializer;
-import org.springframework.data.redis.serializer.StringRedisSerializer;
+import org.springframework.data.redis.core.script.DefaultRedisScript;
+import org.springframework.scripting.support.ResourceScriptSource;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
@@ -353,6 +353,42 @@ public class RedisService {
         double index = Math.abs(name.hashCode() % size);
         long indexLong = new Double(index).longValue();
         return getBit("availableUsers", indexLong);
+    }
+    /**
+     * @author jasonxiao
+     * @description  redis实现布隆过滤器  bf.add 方法
+     * @date 2020/9/9
+     * @param 
+     * @return 
+     */
+    public boolean bloomFilterAdd(String key, String value){
+        DefaultRedisScript<Boolean> bloomScript = new DefaultRedisScript<>( );
+        bloomScript.setScriptSource( new ResourceScriptSource( new ClassPathResource("bloomAdd.lua")));
+        bloomScript.setResultType(Boolean.class);
+        // 封装参数
+        List<Object> keyList = new ArrayList<>();
+        keyList.add(key);
+        keyList.add(value);
+        Boolean result = (Boolean) redisTemplate.execute(bloomScript, keyList);
+        return result;
+    }
+    /**
+     * @author jasonxiao
+     * @description  redis实现布隆过滤器  bf.exists 方法
+     * @date 2020/9/9
+     * @param
+     * @return
+     */
+    public boolean bloomFilterExists(String key, String value){
+        DefaultRedisScript<Boolean> bloomScript = new DefaultRedisScript<>( );
+        bloomScript.setScriptSource( new ResourceScriptSource( new ClassPathResource("bloomExist.lua")));
+        bloomScript.setResultType(Boolean.class);
+        // 封装参数
+        List<Object> keyList = new ArrayList<>();
+        keyList.add(key);
+        keyList.add(value);
+        Boolean result = (Boolean) redisTemplate.execute(bloomScript, keyList);
+        return result;
     }
 
 }

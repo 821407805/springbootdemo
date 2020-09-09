@@ -150,6 +150,14 @@
             <version>2.9.0</version>
         </dependency>
 
+        <!--谷歌提供的布隆过滤器-->
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>21.0</version>
+        </dependency>
+
+
     </dependencies>
 
     <build>
