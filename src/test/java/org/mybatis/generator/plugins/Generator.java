@@ -1,4 +1,4 @@
-package java.org.mybatis.generator.plugins;
+package org.mybatis.generator.plugins;
 
 import org.apache.commons.io.IOUtils;
 import org.junit.Test;

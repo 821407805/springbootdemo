@@ -164,6 +164,18 @@ public class RedisService {
     }
 
     /**
+     * key 加 或 减
+     * redis decreby increby功能
+     * @param key
+     * @return
+     */
+    public long incre(final String key, long num) {
+        ValueOperations<Serializable, Object> operations = redisTemplate.opsForValue();
+        long result = operations.increment(key, num);
+        return result;
+    }
+
+    /**
      * 哈希 添加
      *
      * @param key

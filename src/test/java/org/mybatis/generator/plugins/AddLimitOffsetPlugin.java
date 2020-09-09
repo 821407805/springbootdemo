@@ -1,4 +1,4 @@
-package java.org.mybatis.generator.plugins;
+package org.mybatis.generator.plugins;
 
 import org.mybatis.generator.api.IntrospectedTable;
 import org.mybatis.generator.api.PluginAdapter;
