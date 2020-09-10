@@ -11,7 +11,12 @@ import org.springframework.util.CollectionUtils;
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import java.util.List;
-
+/**
+ * @Author  Jasonxiao
+ * @Date    2020/9/10
+ * @Version 1.0
+ * @Description: 谷歌布隆过滤器
+*/
 @Service
 public class BloomFilterService {
 
