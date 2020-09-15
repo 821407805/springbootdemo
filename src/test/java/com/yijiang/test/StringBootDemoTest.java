@@ -66,10 +66,11 @@ public class StringBootDemoTest {
         System.out.println(result+"33333333333333333333333333");*/
         redisTemplate.opsForValue().set("test005","ddddddd",10, TimeUnit.SECONDS);
         try {
-            Thread.sleep(5000);
+            Thread.sleep(1);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+        System.out.println(redisTemplate.opsForValue().get("test005") );
     }
     @Test
     public void testList(){
@@ -91,5 +92,20 @@ public class StringBootDemoTest {
         }
 
     }
+    @Test
+    public void testIncr(){
+        redisTemplate.opsForValue().set("accessNum", 0);
+        for (int i = 0; i < 20; i++){
+            new Thread( () -> {
+                redisTemplate.opsForValue().increment("accessNum", 1L);
+                Integer accessNum = (Integer) redisTemplate.opsForValue().get("accessNum");
+                if(accessNum > 5){
+                    System.out.println("秒杀商品已抢光");
+                    return;
+                }
+                System.out.println("accessNum为：" + accessNum);
 
+            } ).start();
+        }
+    }
 }

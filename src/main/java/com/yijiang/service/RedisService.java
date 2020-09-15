@@ -391,4 +391,22 @@ public class RedisService {
         return result;
     }
 
+    /**
+     * @author jasonxiao
+     * @description  redis 秒杀
+     * @date 2020/9/9
+     * @param
+     * @return
+     */
+    public boolean getAndIncrLua(String key){
+        DefaultRedisScript<Boolean> bloomScript = new DefaultRedisScript<>( );
+        bloomScript.setScriptSource( new ResourceScriptSource( new ClassPathResource("secKillIncr.lua")));
+        bloomScript.setResultType(Boolean.class);
+        // 封装参数
+        List<Object> keyList = new ArrayList<>();
+        keyList.add(key);
+        Boolean result = (Boolean) redisTemplate.execute(bloomScript, keyList);
+        return result;
+    }
+
 }
