@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
-import sun.applet.Main;
 
 import java.net.Inet4Address;
 import java.net.InetAddress;
@@ -35,7 +34,7 @@ public class LockNxExJob {
         boolean nxRet = false;
         try{
             //redistemplate setnx操作
-            nxRet = redisTemplate.opsForValue().setIfAbsent(lock,getHostIp());
+            nxRet = redisTemplate.opsForValue().setIfAbsent(lock, getHostIp());
             Object lockValue = redisService.get(lock);
 
             //获取锁失败
@@ -82,7 +81,7 @@ public class LockNxExJob {
                             && ip instanceof Inet4Address
                             && !ip.isLoopbackAddress() //loopback地址即本机地址，IPv4的loopback范围是127.0.0.0 ~ 127.255.255.255
                             && ip.getHostAddress().indexOf(":")==-1){
-                        return ip.getHostAddress()+"";
+                        return ip.getHostAddress().replaceAll("\\.", "a");
                     }
                 }
             }

@@ -46,7 +46,7 @@ public class JedisDistributedLock {
 
     @Autowired
     private RedisService redisService;
-
+    private String unique;
     /*public static final String UNLOCK_LUA;
 
     static {
@@ -61,10 +61,10 @@ public class JedisDistributedLock {
     }*/
 
 
-    @Scheduled(cron = "0/10 * * * * *")
+    //@Scheduled(cron = "0/10 * * * * *")
     public void lockJob() {
 
-        String lock = LOCK_PREFIX + "JedisNxExJob";
+        String lock = "JedisNxExJob";
         boolean lockRet = false;
         try {
             lockRet = this.setLock(lock, 600);
@@ -133,7 +133,7 @@ public class JedisDistributedLock {
     private boolean releaseLock(String key, String value) {
         lockScript = new DefaultRedisScript<>();
         lockScript.setScriptSource(
-                new ResourceScriptSource(new ClassPathResource("unlock.lua")));
+                new ResourceScriptSource(new ClassPathResource("config/unlock.lua")));
         lockScript.setResultType(Boolean.class);
         // 封装参数
         List<Object> keyList = new ArrayList<Object>();
@@ -160,7 +160,7 @@ public class JedisDistributedLock {
                             && ip instanceof Inet4Address
                             && !ip.isLoopbackAddress() //loopback地址即本机地址，IPv4的loopback范围是127.0.0.0 ~ 127.255.255.255
                             && ip.getHostAddress().indexOf(":") == -1) {
-                        return ip.getHostAddress();
+                        return ip.getHostAddress().replaceAll("\\.", "c");
                     }
                 }
             }

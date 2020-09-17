@@ -1,7 +1,6 @@
 package com.yijiang.service;
 
 import com.yijiang.domain.User;
-import com.yijiang.domain.UserScore;
 import com.yijiang.domain.UserScoreExample;
 import com.yijiang.mapper.UserMapper;
 import org.springframework.beans.factory.InitializingBean;
@@ -25,7 +24,7 @@ public class RankingService implements InitializingBean {
 
     private static final String RANKGNAME = "user_score";
 
-    private static final String SALESCORE = "sale_score_rank:";
+    private static final String SALESCORE = "sale_score_rank";
 
     @Autowired
     private RedisService redisService;

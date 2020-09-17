@@ -381,7 +381,7 @@ public class RedisService {
      */
     public boolean bloomFilterExists(String key, String value){
         DefaultRedisScript<Boolean> bloomScript = new DefaultRedisScript<>( );
-        bloomScript.setScriptSource( new ResourceScriptSource( new ClassPathResource("bloomExist.lua")));
+        bloomScript.setScriptSource( new ResourceScriptSource( new ClassPathResource("config/bloomExist.lua")));
         bloomScript.setResultType(Boolean.class);
         // 封装参数
         List<Object> keyList = new ArrayList<>();
@@ -400,7 +400,7 @@ public class RedisService {
      */
     public boolean getAndIncrLua(String key){
         DefaultRedisScript<Boolean> bloomScript = new DefaultRedisScript<>( );
-        bloomScript.setScriptSource( new ResourceScriptSource( new ClassPathResource("secKillIncr.lua")));
+        bloomScript.setScriptSource( new ResourceScriptSource( new ClassPathResource("config/secKillIncr.lua")));
         bloomScript.setResultType(Boolean.class);
         // 封装参数
         List<Object> keyList = new ArrayList<>();

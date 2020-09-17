@@ -38,7 +38,7 @@ public class LuaDistributeLock {
 
     private DefaultRedisScript<Boolean> lockScript;
 
-    @Scheduled(cron = "0/10 * * * * *")
+    //@Scheduled(cron = "0/10 * * * * *")
     public void lockJob() {
 
         String lock = LOCK_PREFIX + "LockNxExJob";
@@ -46,7 +46,6 @@ public class LuaDistributeLock {
         boolean luaRet = false;
         try {
             luaRet = luaExpress(lock,getHostIp());
-
             //获取锁失败
             if (!luaRet) {
                 String value = (String) redisService.get(lock);
@@ -78,7 +77,7 @@ public class LuaDistributeLock {
     public Boolean luaExpress(String key,String value) {
         lockScript = new DefaultRedisScript<Boolean>();
         lockScript.setScriptSource(
-                new ResourceScriptSource(new ClassPathResource("add.lua")));
+                new ResourceScriptSource(new ClassPathResource("config/add.lua")));
         lockScript.setResultType(Boolean.class);
         // 封装参数
         List<Object> keyList = new ArrayList<Object>();
@@ -105,7 +104,7 @@ public class LuaDistributeLock {
                             && ip instanceof Inet4Address
                             && !ip.isLoopbackAddress() //loopback地址即本机地址，IPv4的loopback范围是127.0.0.0 ~ 127.255.255.255
                             && ip.getHostAddress().indexOf(":") == -1) {
-                        return ip.getHostAddress();
+                        return ip.getHostAddress().replaceAll("\\.","b");
                     }
                 }
             }
