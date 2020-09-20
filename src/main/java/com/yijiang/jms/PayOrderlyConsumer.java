@@ -30,6 +30,11 @@ public class PayOrderlyConsumer {
         consumer.setMessageModel(MessageModel.CLUSTERING);
         consumer.subscribe(JmsConfig.ORDERLY_TOPIC, "*");
 
+        // 每次拉取的间隔，单位为毫秒 流量削峰时使用
+        consumer.setPullInterval(2000);
+        // 设置每次从队列中拉取的消息数为16 流量削峰时使用
+        consumer.setPullBatchSize(16);
+
         // 这里使用的是 MessageListenerOrderly 保证顺序消费
         consumer.registerMessageListener(new MessageListenerOrderly() {
             @Override
