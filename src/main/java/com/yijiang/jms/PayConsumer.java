@@ -36,6 +36,8 @@ public class PayConsumer {
 
         // 注：只有在消息模式为MessageModel.CLUSTERING集群模式时，Broker才会自动进行重试，广播消息是不会重试的
         // 当Consumer处理时间过长，在超时时间内没有返回给Broker消费状态，那么Broker也会自动重试
+        // 重试时间间隔配置，默认每条消息最多重试16次
+        // messageDelayLevel=1s 5s 10s 30s 1m 2m 3m 4m 5m 6m 7m 8m 9m 10m 20m 30m 1h 2h
         consumer.setMaxReconsumeTimes(4);
 
         consumer.registerMessageListener((MessageListenerConcurrently) (msgs, context) -> {
