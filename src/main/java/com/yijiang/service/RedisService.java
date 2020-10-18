@@ -258,8 +258,9 @@ public class RedisService {
     }
 
     /**
-     * 有序集合获取
-     *
+     * 获取两个分数之间的有序集合
+     * rangeByScore(K,Smin,Smax,[offset],[count])：键为K的集合，offerset和count是限制条件，从索引1开始找到count个元素=子集，从子集中找到Smin<=score<=Smax的元素集合，返回Set<V>，正序
+     * reverseRangeByScore(K,Smin,Smax,[offset],[count])：键为K的集合，offerset和count是限制条件，从索引1开始找到count个元素=子集，从子集中找到Smin<=score<=Smax的元素集合，返回Set<V>，倒序
      * @param key
      * @param scoure
      * @param scoure1
@@ -267,11 +268,12 @@ public class RedisService {
      */
     public Set<Object> rangeByScore(String key, double scoure, double scoure1) {
         ZSetOperations<String, Object> zset = redisTemplate.opsForZSet();
-        redisTemplate.opsForValue();
         return zset.rangeByScore(key, scoure, scoure1);
     }
     /**
-     * 有序集合获取排名
+     *  获取两个索引之间的有序集合
+     *  rangeWithScores(K,start,end)：键为K的集合，索引start<=index<=end的元素子集，返回泛型接口（包括score和value），正序
+     *  reverseRangeWithScores(K,start,end)：键为K的集合，索引start<=index<=end的元素子集，返回泛型接口（包括score和value），倒序
      *
      * @param key
      */
@@ -316,12 +318,13 @@ public class RedisService {
 
     /**
      * 有序集合获 按照指定分数区间 取倒序排名（从大到小）
-     *
+     *  rangeByScoreWithScores(K,Smin,Smax,[offset],[count])：键为K的集合，offerset和count是限制条件，从索引1开始找到count个元素=子集，从子集中找到Smin<=score<=Smax的元素集合，返回泛型接口（包括score和value），正序
+     *  reverseRangeByScoreWithScores(K,Smin,Smax,[offset],[count])：键为K的集合，offerset和count是限制条件，从索引1开始找到count个元素=子集，从子集中找到Smin<=score<=Smax的元素集合，返回泛型接口（包括score和value），倒序
      * @param key
      */
-    public Set<ZSetOperations.TypedTuple<Object>> reverseZRankWithScore(String key, double min, double max) {
+    public Set<ZSetOperations.TypedTuple<Object>> reverseZRankWithScore(String key, double minScore, double maxScore) {
         ZSetOperations<String, Object> zset = redisTemplate.opsForZSet();
-        Set<ZSetOperations.TypedTuple<Object>> ret = zset.reverseRangeByScoreWithScores(key,min,max);
+        Set<ZSetOperations.TypedTuple<Object>> ret = zset.reverseRangeByScoreWithScores(key,minScore,maxScore);
         return ret;
     }
 

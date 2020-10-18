@@ -75,7 +75,7 @@ public class LuaDistributeLock {
      * @return
      */
     public Boolean luaExpress(String key,String value) {
-        lockScript = new DefaultRedisScript<Boolean>();
+        lockScript = new DefaultRedisScript<>();
         lockScript.setScriptSource(
                 new ResourceScriptSource(new ClassPathResource("config/add.lua")));
         lockScript.setResultType(Boolean.class);

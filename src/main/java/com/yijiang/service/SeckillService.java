@@ -8,11 +8,15 @@ import javax.annotation.Resource;
 
 @Service
 public class SeckillService {
-
+    //开始标记1表示秒杀开始
     private static final String secStartPrefix = "skuId_start_";
+    //接受抢购数
     private static final String secAccess = "skuId_access_";
+    //总数
     private static final String secCount = "skuId_count_";
+    // 布隆过滤器key
     private static final String filterName = "skuId_bloomfilter_";
+    // 已抢购数量
     private static final String bookedName = "skuId_booked_";
 
 
@@ -59,10 +63,11 @@ public class SeckillService {
             redisService.incre(skuIdAccessName, 1);
         }
         //信息校验层
-        if (redisService.bloomFilterExists(filterName, uid+"")){
+        String filterNameSku = filterName + skuId;
+        if (redisService.bloomFilterExists(filterNameSku, uid+"")){
             return "您已经抢购过该商品，请勿重复下发!";
         }else{
-            redisService.bloomFilterAdd(filterName, uid+"");
+            redisService.bloomFilterAdd(filterNameSku, uid+"");
         }
         // 进行秒杀库存查询与扣减，保证原子操作
         Boolean isSuccess = redisService.getAndIncrLua(bookedName+skuId);

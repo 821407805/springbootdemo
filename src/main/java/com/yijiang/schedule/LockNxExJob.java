@@ -35,7 +35,7 @@ public class LockNxExJob {
         try{
             //redistemplate setnx操作
             nxRet = redisTemplate.opsForValue().setIfAbsent(lock, getHostIp());
-            Object lockValue = redisService.get(lock);
+            //Object lockValue = redisService.get(lock);
 
             //获取锁失败
             if(!nxRet){

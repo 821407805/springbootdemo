@@ -12,7 +12,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
-
+/**
+ * @Author  Jasonxiao
+ * @Date    2020/10/13
+ * @Version 1.0
+ * @Description: 
+*/
 @Service
 @CacheConfig(cacheNames="userInfoCache") // 本类内方法指定使用缓存时，默认的名称就是userInfoCache
 @Transactional(propagation=Propagation.REQUIRED,readOnly=false,rollbackFor=Exception.class)
@@ -59,9 +64,17 @@ public class UserService {
     public void deleteAll(){
         this.userMapper.deleteAll();
     }
-
+    /**
+     * @author jasonxiao
+     * @description    @Cacheable 会先查询缓存，如果缓存中存在，则不执行方法
+     *                  value 设置的是 key的前缀，到cacheManager中查找该value，从而设置对应的过期时间
+     *                  生成的key为 UserInfoList::Uservice.findByIdTtl[2]  过期时间为 100s
+     * @date 2020/10/13
+     * @param 
+     * @return 
+     */
     @Nullable
-    @Cacheable(value = "UserInfoList", keyGenerator = "simpleKeyGenerator") // @Cacheable 会先查询缓存，如果缓存中存在，则不执行方法
+    @Cacheable(value = "UserInfoList", keyGenerator = "simpleKeyGenerator")
     public User findByIdTtl(int id){
         System.err.println("根据id=" + id +"获取用户对象，从数据库中获取");
         Assert.notNull(id,"id不用为空");

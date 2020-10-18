@@ -66,6 +66,7 @@ public class RedisConfig {
             stringBuilder.append(".");
             stringBuilder.append(method.getName());
             stringBuilder.append("[");
+            // objects是入参
             for (Object obj : objects) {
                 stringBuilder.append(obj.toString());
             }
@@ -79,7 +80,7 @@ public class RedisConfig {
     public CacheManager cacheManager(RedisConnectionFactory redisConnectionFactory) {
         return new RedisCacheManager(
                 RedisCacheWriter.nonLockingRedisCacheWriter(redisConnectionFactory),
-                // 默认策略，未配置的 key 会使用这个
+                // 默认策略，未配置的 key（即value值） 会使用这个
                 this.getRedisCacheConfigurationWithTtl(600),
                 // 指定 key 策略
                 this.getRedisCacheConfigurationMap()
